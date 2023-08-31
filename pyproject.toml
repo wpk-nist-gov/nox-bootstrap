@@ -29,6 +29,7 @@ dependencies = [
     "nox",
     "noxopt", # p2c: -p
     "ruamel.yaml",
+    "tomli",
 ] # additional packages
 
 [project.urls]

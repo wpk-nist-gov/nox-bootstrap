@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import shutil
+import sys
 from dataclasses import replace  # noqa
 from itertools import product
 from pathlib import Path
@@ -22,6 +23,8 @@ from typing import (
 import nox
 from noxopt import NoxOpt, Option, Session
 
+# fmt: off
+sys.path.append(".")
 from tools.noxtools import (
     combine_list_str,
     load_nox_config,
@@ -35,6 +38,9 @@ from tools.noxtools import (
     sort_like,
     update_target,
 )
+
+sys.path.pop()
+# fmt: on
 
 # * Names ------------------------------------------------------------------------------
 
