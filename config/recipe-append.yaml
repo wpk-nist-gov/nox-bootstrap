@@ -1,0 +1,19 @@
+test:
+  imports:
+    - nox_bootstrap
+  commands:
+    - pip check
+  requires:
+    - pip
+
+about:
+  home: https://github.com/wpk-nist-gov/nox-bootstrap
+  summary: Meta package to bootstrap package environment with `pipx run ... nox`
+  description: |
+    Meta package to bootstrap package environment with `pipx run ... nox`
+  license: NIST-PD
+  license_file: LICENSE
+
+extra:
+  recipe-maintainers:
+    - wpk-nist-gov
