@@ -29,7 +29,6 @@ dependencies = [
     "nox",
     "noxopt", # p2c: -p
     "ruamel.yaml",
-    "tomli",
 ] # additional packages
 
 [project.urls]
@@ -72,7 +71,7 @@ dev = [
 tools = [
     "pre-commit", #
     "cruft",
-    "scriv",
+    "scriv", # p2c: -p
     "nbqa",
 ]
 dev-complete = [

@@ -117,3 +117,4 @@ cruft.patch
 /nox-bootstrap-feedstock*/
 /src/**/_version.py
 tuna-loadtime.log
+/environment/py*-dev.yaml

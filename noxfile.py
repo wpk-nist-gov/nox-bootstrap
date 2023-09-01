@@ -23,6 +23,7 @@ from typing import (
 import nox
 from noxopt import NoxOpt, Option, Session
 
+# Not sure why I need to adjust sys.path sometimes and not others.
 # fmt: off
 sys.path.append(".")
 from tools.noxtools import (
@@ -119,6 +120,8 @@ def run_annotated(**kwargs):  # type: ignore
 LOCK_CLI = Annotated[bool, LOCK_OPT]
 RUN_CLI = Annotated[list[list[str]], RUN_OPT]
 TEST_OPTS_CLI = opts_annotated(help="extra arguments/flags to pytest")
+
+DEV_EXTRAS_CLI = cmd_annotated(help="extras included in user dev environment")
 
 # CMD_CLI = Annotated[list[str], CMD_OPT]
 
@@ -316,7 +319,7 @@ def dev_venv(
         session=session,
         name="dev-venv",
         lock=lock,
-        extras=["dev"],
+        extras=CONFIG["environment-extras"].get("dev", ["nox", "dev"]),
         display_name=f"{PACKAGE_NAME}-dev-venv",
         install_package=True,
         force_reinstall=force_reinstall,
@@ -325,17 +328,43 @@ def dev_venv(
     session_run_commands(session, dev_run)
 
 
-# ** pyproject2conda (create environment.yaml and requirement.txt files)
-@DEFAULT_SESSION_VENV
+@group.session(python=False)
+def config(
+    session: Session,
+    dev_extras: DEV_EXTRAS_CLI = [],  # type: ignore
+    python_paths: cmd_annotated(help="python paths to append to paths") = [],  # type: ignore
+):
+    """Create the file ./config/noxconfig.toml"""
+
+    args = []
+    if dev_extras:
+        args += ["--dev"] + dev_extras
+    if python_paths:
+        args += ["--path"] + python_paths
+
+    session.run("python", "tools/noxconfig.py", *args)
+
+
+@group.session(python=False)
 def pyproject2conda(
     session: Session,
     force_reinstall: FORCE_REINSTALL_CLI = False,
-    pyproject2conda_force: bool = False,
 ) -> None:
-    """Create environment.yaml files from pyproject.toml using pyproject2conda."""
+    """Alias to reqs"""
+    session.notify("reqs")
+
+
+# ** pyproject2conda (create environment.yaml and requirement.txt files)
+@DEFAULT_SESSION_VENV
+def reqs(
+    session: Session,
+    force_reinstall: FORCE_REINSTALL_CLI = False,
+    reqs_force: bool = False,
+) -> None:
+    """Create environment.yaml and requirement.txt files from pyproject.toml using pyproject2conda."""
     pkg_install_venv(
         session=session,
-        name="pyporject2conda",
+        name="reqs",
         reqs=["pyproject2conda>=0.4.0"],
         force_reinstall=force_reinstall,
     )
@@ -364,7 +393,7 @@ def pyproject2conda(
                 ext={"yaml": ".yaml", "requirements": ".txt"}[cmd],
             )
 
-        if pyproject2conda_force or update_target(output, "pyproject.toml"):
+        if reqs_force or update_target(output, "pyproject.toml"):
             args = [cmd, "-o", output] + _to_args("-e", extras)
 
             if cmd == "yaml":
@@ -381,10 +410,11 @@ def pyproject2conda(
             session.run("pyproject2conda", *args)
         else:
             session.log(
-                f"{output} up to data.  Pass --pyproject2conda-force to force recreation"
+                f"{output} up to data.  Pass --environments-force to force recreation"
             )
 
     extras = CONFIG.get("environment-extras", {"dev": ["dev", "nox"]})
+    extras["dev-base"] = ["dev"]
 
     # All versions:
     for env, python_version in product(["test", "typing"], PYTHON_ALL_VERSIONS):
@@ -395,7 +425,9 @@ def pyproject2conda(
             python_version=python_version,
         )
 
-    for env, python_version in product(["docs", "dev"], [PYTHON_DEFAULT_VERSION]):
+    for env, python_version in product(
+        ["docs", "dev", "dev-base"], [PYTHON_DEFAULT_VERSION]
+    ):
         create_env(
             name=env,
             extras=extras.get(env, env),

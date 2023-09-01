@@ -101,43 +101,12 @@ def load_nox_config(path: str | Path = "./config/noxconfig.toml") -> dict[str, A
     [nox.extras]
     dev = ["dev", "nox"]
     """
-    import os
-    from glob import glob
 
-    import tomli
+    from .noxconfig import NoxConfig
 
-    config: dict[str, Any] = {}
+    n = NoxConfig.from_path(path)
 
-    path = Path(path)
-    if not path.exists():
-        return config
-
-    with path.open("rb") as f:
-        data = tomli.load(f)
-
-    # Python paths
-    try:
-        paths = []
-        for p in data["nox"]["python"]["paths"]:
-            paths.extend(glob(os.path.expanduser(p)))
-
-        paths_str = ":".join(map(str, paths))
-        os.environ["PATH"] = paths_str + ":" + os.environ["PATH"]
-    except KeyError:
-        pass
-
-    # extras:
-    extras = {"dev": ["nox", "dev"]}
-    try:
-        for k, v in data["nox"]["extras"].items():
-            extras[k] = v
-    except KeyError:
-        pass
-
-    config["environment-extras"] = extras
-
-    # for py in PYTHON_ALL_VERSIONS:
-    #     print(f"which python{py}", shutil.which(f"python{py}"))
+    config = n.to_config()
 
     return config
 
