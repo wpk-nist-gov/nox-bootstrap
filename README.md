@@ -1,9 +1,11 @@
 <!-- markdownlint-disable MD041 -->
 
-[![Repo][repo-badge]][repo-link] [![Docs][docs-badge]][docs-link]
+[![Repo][repo-badge]][repo-link] <!-- [![Docs][docs-badge]][docs-link] -->
 [![PyPI license][license-badge]][license-link]
-[![PyPI version][pypi-badge]][pypi-link]
-[![Conda (channel only)][conda-badge]][conda-link]
+
+<!-- [![PyPI version][pypi-badge]][pypi-link] -->
+<!-- [![Conda (channel only)][conda-badge]][conda-link] -->
+
 [![Code style: black][black-badge]][black-link]
 
 <!--
@@ -15,61 +17,54 @@
 
 [black-badge]: https://img.shields.io/badge/code%20style-black-000000.svg
 [black-link]: https://github.com/psf/black
-[pypi-badge]: https://img.shields.io/pypi/v/nox-bootstrap
-[pypi-link]: https://pypi.org/project/nox-bootstrap
-[docs-badge]: https://img.shields.io/badge/docs-sphinx-informational
-[docs-link]: https://pages.nist.gov/nox-bootstrap/
+
+<!-- [pypi-badge]: https://img.shields.io/pypi/v/nox-bootstrap -->
+<!-- [pypi-link]: https://pypi.org/project/nox-bootstrap -->
+<!-- [docs-badge]: https://img.shields.io/badge/docs-sphinx-informational -->
+<!-- [docs-link]: https://pages.nist.gov/nox-bootstrap/ -->
+
 [repo-badge]: https://img.shields.io/badge/--181717?logo=github&logoColor=ffffff
 [repo-link]: https://github.com/wpk-nist-gov/nox-bootstrap
-[conda-badge]: https://img.shields.io/conda/v/wpk-nist/nox-bootstrap
-[conda-link]: https://anaconda.org/wpk-nist/nox-bootstrap
+
+<!-- [conda-badge]: https://img.shields.io/conda/v/wpk-nist/nox-bootstrap -->
+<!-- [conda-link]: https://anaconda.org/wpk-nist/nox-bootstrap -->
+
 [license-badge]: https://img.shields.io/pypi/l/cmomy?color=informational
 [license-link]: https://github.com/wpk-nist-gov/nox-bootstrap/blob/main/LICENSE
 
 <!-- other links -->
 
+[nox]: https://github.com/wntrblm/nox
+[pipx]: https://github.com/pypa/pipx
+
 # `nox-bootstrap`
 
-A meta package to bootstrap nox
+A meta package to bootstrap [nox] controlled environment.
 
 ## Overview
 
-Quick overview...
+I use nox to manage development environments as well as testing/linting/typing
+environments. This meta package makes it easy to bootstrap the creation of a
+development environment with [pipx]:
 
-## Features
+```bash
+pipx run --spec git+https://github.com/wpk-nist-gov/nox-bootstrap.git \
+     nox -s bootstrap -- \
+     --python-paths "~/.conda/envs/test-3.*/bin" \
+     --dev-extras dev nox
+```
 
-Some features...
+Where to commands and options passed to [nox] are project specific. See
+[here](https://pages.nist.gov/thermoextrap/contributing.html) for example usage.
+If the above command creates a development environment with nox requirements,
+then you can bootstrap your working environment with one command.
 
 ## Status
 
 This package is actively used by the author. Please feel free to create a pull
 request for wanted features and suggestions!
 
-## Quick start
-
-Use one of the following
-
-```bash
-pip install nox-bootstrap
-```
-
-or
-
-```bash
-conda install -c wpk-nist nox-bootstrap
-```
-
-## Example usage
-
-```python
-import nox_bootstrap
-```
-
 <!-- end-docs -->
-
-## Documentation
-
-See the [documentation][docs-link] for a look at `nox-bootstrap` in action.
 
 ## License
 
@@ -77,7 +72,21 @@ This is free software. See [LICENSE][license-link].
 
 ## Related work
 
-Any other stuff to metion....
+This is used in the following projects:
+
+- [cmomy]
+- [tmmc-lnpy]
+- [thermoextrap]
+- [analphipy]
+- [module-utilities]
+- [pyproject2conda]
+
+[cmomy]: https://github.com/usnistgov/cmomy
+[tmmc-lnpy]: https://github.com/usnistgov/tmmc-lnpy
+[thermoextrap]: https://github.com/usnistgov/thermoextrap
+[analphipy]: https://github.com/usnistgov/analphipy
+[module-utilities]: https://github.com/usnistgov/module-utilities
+[pyproject2conda]: https://github.com/wpk-nist-gov/pyproject2conda
 
 ## Contact
 

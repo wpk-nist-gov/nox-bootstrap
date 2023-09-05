@@ -165,9 +165,9 @@ class NoxConfig:
         os.environ["PATH"] = fmt.format(path_new=paths_str, path_old=os.environ["PATH"])
 
     def to_config(
-        self, add_paths_to_environ=True, prepend: bool = True
+        self, add_paths_to_environ: bool = True, prepend: bool = True
     ) -> dict[str, Any]:
-        config = {}
+        config: dict[str, Any] = {}
 
         if self.python_paths:
             config["paths"] = self.expand_python_paths()

@@ -9,7 +9,6 @@ dependencies:
   - python=3.10
   - nox
   - ruamel.yaml
-  - tomli
   - ipython
   - pyenchant
   - ghp-import

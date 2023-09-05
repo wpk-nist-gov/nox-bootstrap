@@ -9,7 +9,6 @@ dependencies:
   - python=3.8
   - nox
   - ruamel.yaml
-  - tomli
   - pytest
   - pytest-xdist
   - pytest-cov

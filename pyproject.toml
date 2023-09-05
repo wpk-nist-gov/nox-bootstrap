@@ -300,6 +300,7 @@ warn_return_any = true
 warn_unused_configs = true
 exclude = [".eggs", ".tox", "doc", "docs", ".nox"]
 check_untyped_defs = true
+strict = true
 
 [[tool.mypy.overrides]]
 ignore_missing_imports = true

@@ -9,7 +9,6 @@ dependencies:
   - python=3.9
   - nox
   - ruamel.yaml
-  - tomli
   - pytype
   - mypy >= 1.4.1
   - pytest

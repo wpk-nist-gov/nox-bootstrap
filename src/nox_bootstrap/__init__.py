@@ -1,1 +1,1 @@
-"""Empty package"""
+"""Empty package."""

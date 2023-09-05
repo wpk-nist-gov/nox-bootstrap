@@ -9,7 +9,6 @@ dependencies:
   - python=3.11
   - nox
   - ruamel.yaml
-  - tomli
   - mypy >= 1.4.1
   - pytest
   - pytest-xdist
