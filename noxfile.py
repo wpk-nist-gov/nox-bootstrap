@@ -193,7 +193,7 @@ def config(
     dev_extras: DEV_EXTRAS_CLI = [],  # type: ignore
     python_paths: PYTHON_PATHS_CLI = [],  # type: ignore
 ) -> None:
-    """Create the file ./config/noxconfig.toml"""
+    """Create the file ./config/userconfig.toml"""
 
     args = []
     if dev_extras:
@@ -201,7 +201,7 @@ def config(
     if python_paths:
         args += ["--python-paths"] + python_paths
 
-    session.run("python", "tools/noxconfig.py", *args)
+    session.run("python", "tools/projectconfig.py", *args)
 
 
 @group.session(python=False)  # type: ignore
@@ -268,7 +268,7 @@ def requirements(
         if (
             requirements_force
             or update_target(output, "pyproject.toml")
-            or update_target(output, "config/noxconfig.toml", allow_missing=True)
+            or update_target(output, "config/userconfig.toml", allow_missing=True)
         ):
             args = [cmd, "-o", output] + _to_args("-e", extras)
 

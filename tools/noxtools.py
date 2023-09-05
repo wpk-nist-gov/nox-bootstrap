@@ -221,7 +221,7 @@ def open_webpage(path: str | Path | None = None, url: str | None = None) -> None
 
 
 # --- Load user configuration ----------------------------------------------------------
-def load_nox_config(path: str | Path = "./config/noxconfig.toml") -> dict[str, Any]:
+def load_nox_config(path: str | Path = "./config/userconfig.toml") -> dict[str, Any]:
     """
     Load user toml config file.
 
@@ -237,13 +237,9 @@ def load_nox_config(path: str | Path = "./config/noxconfig.toml") -> dict[str, A
     dev = ["dev", "nox"]
     """
 
-    from .noxconfig import NoxConfig
+    from .projectconfig import ProjectConfig
 
-    n = NoxConfig.from_path(path)
-
-    config = n.to_config()
-
-    return config
+    return ProjectConfig.from_path(path).to_nox_config()
 
 
 # --- Nox session utilities ------------------------------------------------------------

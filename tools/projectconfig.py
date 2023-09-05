@@ -1,4 +1,9 @@
-"""Methods to work with config file (for personal setup) of nox."""
+"""
+Methods to work with config file (for personal setup) of nox and other project tools.
+
+Right now, this is only for user specific nox config.  But leaving open it could be used
+for other things in the future.
+"""
 from __future__ import annotations
 
 import configparser
@@ -12,9 +17,9 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
 
-class NoxConfig:
+class ProjectConfig:
     """
-    Read/write/update noxconfg.toml
+    Read/write/update userconfig.toml
 
     This uses a combination of ini/json to read/write the config file.
     This is to avoid having to import from tomli/tomli_w.
@@ -80,8 +85,8 @@ class NoxConfig:
         return python_paths, env_extras
 
     @classmethod
-    def from_path(cls, path: str | Path | None = None) -> Self:
-        path = Path(path or "./config/noxconfig.toml")
+    def from_path(cls, path: str | Path = "./config/userconfig.toml") -> Self:
+        path = Path(path)
 
         if path.exists():
             python_paths, env_extras = cls._path_to_params(path)
@@ -115,11 +120,12 @@ class NoxConfig:
 
         header = dedent(
             """\
-        # This file is an example for setting user specific config
-        # for use with nox.  Copy this file to `config/noxconfig.toml` in the
-        # root of the repo.  The file `config/noxconfig.toml` should NOT be tracked.
+        # This file is for setting user specific config for use
+        # with nox and other project tools and applications.
         #
-        # For example, you could have:
+        # THIS FILE SHOULD NOT BE TRACKED BY GIT!!!!
+        #
+        # Example usage:
         #
         # [nox.python]
         # paths = ["~/.conda/envs/test-3.*/bin"]
@@ -142,7 +148,7 @@ class NoxConfig:
         return s
 
     def __repr__(self) -> str:
-        return f"<NoxConfig(python_paths={self.python_paths}, env_extras={self.env_extras})>"
+        return f"<ProjectConfig(python_paths={self.python_paths}, env_extras={self.env_extras})>"
 
     def expand_python_paths(self) -> list[str]:
         from glob import glob
@@ -164,7 +170,7 @@ class NoxConfig:
             fmt = "{path_old}:{path_new}"
         os.environ["PATH"] = fmt.format(path_new=paths_str, path_old=os.environ["PATH"])
 
-    def to_config(
+    def to_nox_config(
         self, add_paths_to_environ: bool = True, prepend: bool = True
     ) -> dict[str, Any]:
         config: dict[str, Any] = {}
@@ -186,7 +192,7 @@ class NoxConfig:
 def main() -> None:
     import argparse
 
-    p = argparse.ArgumentParser(description="Create the file ./config/noxconfig.toml")
+    p = argparse.ArgumentParser(description="Create the file config/userconfig.toml")
 
     p.add_argument(
         "-p",
@@ -204,9 +210,17 @@ def main() -> None:
         help="extras (from pyproject.toml) to include in development environment",
     )
 
+    p.add_argument(
+        "-f",
+        "--file",
+        help="file to store configuration",
+        type=str,
+        default="./config/userconfig.toml",
+    )
+
     args = p.parse_args()
 
-    n = NoxConfig.from_path(path="./config/noxconfig.toml")
+    n = ProjectConfig.from_path(path=args.file)
 
     if args.python_paths:
         n.python_paths = args.python_paths
@@ -214,7 +228,7 @@ def main() -> None:
     if args.dev_extras:
         n.env_extras = {"dev": args.dev_extras}
 
-    n.to_path("./config/noxconfig.toml")
+    n.to_path(args.file)
 
 
 if __name__ == "__main__":
