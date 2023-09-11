@@ -922,6 +922,28 @@ def _typing(
     session_run_commands(session, run_internal, external=False)
 
 
+@group.session
+def lint(
+    session: nox.Session,
+    lint_run: RUN_CLI = [],  # noqa
+    force_reinstall: FORCE_REINSTALL_CLI = False,
+    log_session: bool = False,
+):
+    """Run linters with pre-commit.  For use with CI"""
+    pkg_install_venv(
+        session=session,
+        name="lint",
+        reqs=["pre-commit"],
+        force_reinstall=force_reinstall,
+        log_session=log_session,
+    )
+
+    if lint_run:
+        session_run_commands(session, lint_run, external=False)
+    else:
+        session.run("pre-commit", "run", "--all-files")
+
+
 @ALL_SESSION
 def typing(
     session: nox.Session,
