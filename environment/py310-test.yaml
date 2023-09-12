@@ -8,11 +8,11 @@ channels:
 dependencies:
   - python=3.10
   - nox
-  - ruamel.yaml
   - pytest
-  - pytest-xdist
   - pytest-cov
   - pytest-sugar
+  - pytest-xdist
+  - ruamel.yaml
   - pip
   - pip:
       - noxopt

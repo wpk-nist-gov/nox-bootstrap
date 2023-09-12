@@ -7,13 +7,13 @@ channels:
   - conda-forge
 dependencies:
   - python=3.11
-  - nox
-  - ruamel.yaml
   - mypy >= 1.4.1
+  - nox
   - pytest
-  - pytest-xdist
   - pytest-cov
   - pytest-sugar
+  - pytest-xdist
+  - ruamel.yaml
   - pip
   - pip:
       - noxopt
