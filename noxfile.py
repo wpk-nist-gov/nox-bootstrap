@@ -1,4 +1,5 @@
 """Config file for nox."""
+# * Imports ----------------------------------------------------------------------------
 from __future__ import annotations
 
 import shutil
@@ -39,6 +40,7 @@ from tools.noxtools import (
 
 sys.path.pop()
 # fmt: on
+
 
 # * Names ------------------------------------------------------------------------------
 
@@ -137,9 +139,10 @@ LOG_SESSION_CLI = Annotated[
     ),
 ]
 
-
-# * Environments------------------------------------------------------------------------
+# * Environments -----------------------------------------------------------------------
 # ** Development (conda)
+
+
 @DEFAULT_SESSION
 def dev(
     session: Session,
@@ -762,7 +765,6 @@ def dist_pypi_condaenv(
         force_reinstall=force_reinstall,
         log_session=log_session,
     )
-
     _dist_pypi(
         session=session,
         run=dist_pypi_run,
@@ -885,6 +887,34 @@ def _append_recipe(recipe_path: str, append_path: str) -> None:
         f.writelines(recipe + ["\n"] + append)
 
 
+# ** lint
+@group.session
+def lint(
+    session: nox.Session,
+    lint_run: RUN_CLI = [],  # noqa
+    force_reinstall: FORCE_REINSTALL_CLI = False,
+    log_session: bool = False,
+):
+    """
+    Run linters with pre-commit.
+
+    Defaults to `pre-commit run --all-files`.
+    To run something else pass, e.g., `nox -s lint -- --lint-run "pre-commit run --hook-stage manual --all-files`
+    """
+    pkg_install_venv(
+        session=session,
+        name="lint",
+        reqs=["pre-commit"],
+        force_reinstall=force_reinstall,
+        log_session=log_session,
+    )
+
+    if lint_run:
+        session_run_commands(session, lint_run, external=False)
+    else:
+        session.run("pre-commit", "run", "--all-files")
+
+
 # ** type checking
 def _typing(
     session: nox.Session,
@@ -920,28 +950,6 @@ def _typing(
         else:
             session.log(f"skipping unknown command {c}")
     session_run_commands(session, run_internal, external=False)
-
-
-@group.session
-def lint(
-    session: nox.Session,
-    lint_run: RUN_CLI = [],  # noqa
-    force_reinstall: FORCE_REINSTALL_CLI = False,
-    log_session: bool = False,
-):
-    """Run linters with pre-commit.  For use with CI"""
-    pkg_install_venv(
-        session=session,
-        name="lint",
-        reqs=["pre-commit"],
-        force_reinstall=force_reinstall,
-        log_session=log_session,
-    )
-
-    if lint_run:
-        session_run_commands(session, lint_run, external=False)
-    else:
-        session.run("pre-commit", "run", "--all-files")
 
 
 @ALL_SESSION
