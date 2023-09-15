@@ -68,11 +68,13 @@ dev = [
     "nox-bootstrap[typing-extras]",
     "nox-bootstrap[dev-extras]",
 ]
+pyright = ["pyright"]
 tools = [
     "pre-commit", #
-    "cruft",
+    # "cruft",
     "scriv", # p2c: -p
     "nbqa",
+    "nox-bootstrap[pyright]",
 ]
 dev-complete = [
     "nox-bootstrap[dev]", #
