@@ -2,7 +2,7 @@
 
 ## Stable release
 
-To install nox-bootstrap, run this command in your terminal:
+To install `nox-bootstrap`, run this command in your terminal:
 
 ```bash
 pip install nox-bootstrap
