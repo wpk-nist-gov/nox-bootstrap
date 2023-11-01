@@ -476,7 +476,9 @@ def linkcode_resolve(domain, info):
     else:
         linespec = ""
 
+    # fmt: off
     fn = os.path.relpath(fn, start=os.path.dirname(nox_bootstrap.__file__))
+    # fmt: on
 
     return f"https://github.com/{github_username}/nox-bootstrap/blob/{html_context['github_version']}/src/nox_bootstrap/{fn}{linespec}"
 
